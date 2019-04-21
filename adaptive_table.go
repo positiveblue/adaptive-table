@@ -14,6 +14,13 @@ func NewAdaptiveTable(initSize int) AdaptiveTable {
 		threshold: initSize}
 }
 
+func NewAdaptiveTableComplete(initSize, maxSize, threshold int) AdaptiveTable {
+	return AdaptiveTable{
+		initSize:  initSize,
+		maxSize:   maxSize,
+		threshold: threshold}
+}
+
 func (at *AdaptiveTable) Size() int {
 	return len(at.values)
 }
