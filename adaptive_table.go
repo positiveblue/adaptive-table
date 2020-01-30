@@ -92,3 +92,7 @@ func (at *AdaptiveTable) Insert(value uint64) int {
 
 	return index
 }
+
+func (at *AdaptiveTable) Values() []uint64 {
+	return at.values
+}

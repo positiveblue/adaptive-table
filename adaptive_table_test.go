@@ -229,3 +229,19 @@ func TestAdaptiveTableInsertStatistics(t *testing.T) {
 		t.Error("The size of the table is not in the range, try to run this test again")
 	}
 }
+
+func TestValues(t *testing.T) {
+
+	at := NewAdaptiveTable(10)
+
+	for i := 0; i < 10; i++ {
+		at.Insert(uint64(i))
+	}
+
+	values := at.Values()
+	for i := range values {
+		if values[i] != uint64(i) {
+			t.Error("Values() does not return the correct elements in the table")
+		}
+	}
+}
