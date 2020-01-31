@@ -1,10 +1,11 @@
 package adaptivetable
 
 type AdaptiveTable struct {
-	values    []uint64
-	initSize  int
-	maxSize   int
-	threshold int
+	values             []uint64
+	initSize           int
+	maxSize            int
+	threshold          int
+	relativePercentage bool
 }
 
 func NewAdaptiveTable(initSize int) AdaptiveTable {
@@ -14,11 +15,13 @@ func NewAdaptiveTable(initSize int) AdaptiveTable {
 		threshold: initSize}
 }
 
-func NewAdaptiveTableComplete(initSize, maxSize, threshold int) AdaptiveTable {
+func NewAdaptiveTableComplete(initSize, maxSize, threshold int, relativePercentage bool) AdaptiveTable {
 	return AdaptiveTable{
-		initSize:  initSize,
-		maxSize:   maxSize,
-		threshold: threshold}
+		initSize:           initSize,
+		maxSize:            maxSize,
+		threshold:          threshold,
+		relativePercentage: relativePercentage,
+	}
 }
 
 func (at *AdaptiveTable) Size() int {
@@ -66,6 +69,17 @@ func (at *AdaptiveTable) IsNewRecord(value uint64) bool {
 	return false
 }
 
+func (at *AdaptiveTable) currentThreshold() int {
+	if !at.relativePercentage {
+		return at.threshold
+	}
+
+	if len(at.values) < at.initSize {
+		return at.initSize
+	}
+	return int(float32(len(at.values)*at.threshold) / 100.00)
+}
+
 func (at *AdaptiveTable) Insert(value uint64) int {
 	if !at.IsNewRecord(value) {
 		return -1
@@ -86,7 +100,7 @@ func (at *AdaptiveTable) Insert(value uint64) int {
 		}
 	}
 
-	if index >= at.threshold || at.Size() > at.maxSize {
+	if index >= at.currentThreshold() || at.Size() > at.maxSize {
 		at.Pop()
 	}
 

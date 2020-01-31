@@ -177,6 +177,42 @@ func TestAdaptiveTableIsNewRecord(t *testing.T) {
 	}
 }
 
+func TestAdaptiveTableCurrentThreshold(t *testing.T) {
+	basicAT := NewAdaptiveTable(10)
+	relativeAT := NewAdaptiveTableComplete(11, 100, 20, true)
+
+	if basicAT.currentThreshold() != 10 {
+		t.Error("Curent threshold should be equals to the init size before inserting elements")
+	}
+
+	if relativeAT.currentThreshold() != 11 {
+		t.Error("Curent threshold should be equals to the init size before inserting elements")
+	}
+
+	var i uint64
+	for i = 0; i < 10; i++ {
+		basicAT.Insert(i)
+		relativeAT.Insert(i + 1)
+	}
+
+	if basicAT.currentThreshold() != 10 {
+		t.Error("Curent threshold should be equals to the init size after inserting elements")
+	}
+
+	if relativeAT.currentThreshold() != 11 {
+		t.Error("Curent threshold should be equals to the init size after inserting elements but not filling the table")
+	}
+
+	relativeAT.Insert(0)
+
+	if relativeAT.currentThreshold() != 2 {
+		t.Error("Curent threshold should be a relative to the table size after the table has been filled")
+		t.Error("expected 2")
+		t.Error(relativeAT.currentThreshold())
+
+	}
+
+}
 func TestAdaptiveTableInsert(t *testing.T) {
 	at := NewAdaptiveTable(3)
 
