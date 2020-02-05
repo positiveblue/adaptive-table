@@ -74,9 +74,6 @@ func (at *AdaptiveTable) currentThreshold() int {
 		return at.threshold
 	}
 
-	if len(at.values) < at.initSize {
-		return at.initSize
-	}
 	return int(float32(len(at.values)*at.threshold) / 100.00)
 }
 
@@ -100,7 +97,8 @@ func (at *AdaptiveTable) Insert(value uint64) int {
 		}
 	}
 
-	if index >= at.currentThreshold() || at.Size() > at.maxSize {
+	ct := at.currentThreshold()
+	if index > ct || at.Size() > at.maxSize {
 		at.Pop()
 	}
 

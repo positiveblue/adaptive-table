@@ -185,25 +185,19 @@ func TestAdaptiveTableCurrentThreshold(t *testing.T) {
 		t.Error("Curent threshold should be equals to the init size before inserting elements")
 	}
 
-	if relativeAT.currentThreshold() != 11 {
-		t.Error("Curent threshold should be equals to the init size before inserting elements")
+	if relativeAT.currentThreshold() != 0 {
+		t.Error("Curent threshold should be 0 before inserting elements")
 	}
 
 	var i uint64
 	for i = 0; i < 10; i++ {
 		basicAT.Insert(i)
-		relativeAT.Insert(i + 1)
+		relativeAT.Insert(11 - i)
 	}
 
 	if basicAT.currentThreshold() != 10 {
 		t.Error("Curent threshold should be equals to the init size after inserting elements")
 	}
-
-	if relativeAT.currentThreshold() != 11 {
-		t.Error("Curent threshold should be equals to the init size after inserting elements but not filling the table")
-	}
-
-	relativeAT.Insert(0)
 
 	if relativeAT.currentThreshold() != 2 {
 		t.Error("Curent threshold should be a relative to the table size after the table has been filled")
@@ -263,6 +257,20 @@ func TestAdaptiveTableInsertStatistics(t *testing.T) {
 	// will be included in v1.0.0
 	if at.Size() < 300 || at.Size() > 600 {
 		t.Error("The size of the table is not in the range, try to run this test again")
+	}
+
+	relativeAT := NewAdaptiveTableComplete(32, math.MaxInt64, 50, true)
+	for i := 10000000; i > 0; i-- {
+		k := rand.Uint64()
+		if _, ok := set[k]; !ok {
+			set[k] = true
+			relativeAT.Insert(k)
+		}
+	}
+
+	// TODO: check the expected size
+	if false {
+		t.Error(relativeAT.Size())
 	}
 }
 
