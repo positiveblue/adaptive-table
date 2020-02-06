@@ -235,7 +235,6 @@ func TestAdaptiveTableInsert(t *testing.T) {
 
 func TestAdaptiveTableInsertStatistics(t *testing.T) {
 	rand.Seed(time.Now().UTC().UnixNano())
-	set := make(map[uint64]bool)
 
 	minThreshold := 32
 
@@ -246,10 +245,9 @@ func TestAdaptiveTableInsertStatistics(t *testing.T) {
 
 	for i := 10000000; i > 0; i-- {
 		k := rand.Uint64()
-		if _, ok := set[k]; !ok {
-			set[k] = true
-			at.Insert(k)
-		}
+
+		at.Insert(k)
+
 	}
 
 	// Size of the table should be ~ k*log(n)
@@ -262,10 +260,7 @@ func TestAdaptiveTableInsertStatistics(t *testing.T) {
 	relativeAT := NewAdaptiveTableComplete(32, math.MaxInt64, 50, true)
 	for i := 10000000; i > 0; i-- {
 		k := rand.Uint64()
-		if _, ok := set[k]; !ok {
-			set[k] = true
-			relativeAT.Insert(k)
-		}
+		relativeAT.Insert(k)
 	}
 
 	// TODO: check the expected size

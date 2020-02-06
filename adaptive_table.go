@@ -52,12 +52,13 @@ func (at *AdaptiveTable) Contains(value uint64) bool {
 		return false
 	}
 
-	for _, element := range at.values {
-		if element == value {
+	for i := at.Size() - 1; i >= 0; i-- {
+		if value == at.values[i] {
 			return true
+		} else if value > at.values[i] {
+			return false
 		}
 	}
-
 	return false
 }
 
