@@ -13,7 +13,7 @@ This implementation can be used in other algorithms, which can take advantage of
 
 
 This implementation is used in some other go packages like:
-- KMV for cardinality estiamtion [go-kmv](https://github.com/positiveblue/go-kmv)
+- KMV for cardinality estimation [go-kmv](https://github.com/positiveblue/go-kmv)
 - Minhash for set similarity [adaptive-minhash](https://github.com/positiveblue/adaptive-minhash)
 
 
